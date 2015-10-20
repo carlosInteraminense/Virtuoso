@@ -1,0 +1,15 @@
+input{
+	width:70%;
+	height: 30px;
+	text-align: center;
+	font: normal 14px sans-serif;
+}
+
+#input-user{
+	margin-top: 20px;
+}
+
+#input-password{
+	margin-top: 20px;
+}
+
