@@ -1,11 +1,14 @@
-#telaLoggin{
-	text-align: center; /*centraliza elementos do form*/
-	background-color: #48bc94;
-	border:1px solid #D9D9D9;
-	width: 90%; /*largura da div login*/
-	height: 300px;
-	margin-top: 10px;
-	
+body{
+	background-image: url("../images/background.jpg");
+	background-repeat: no-repeat;
+	color: white;
+}
+
+.telaLogin{
+	background-color: rgba(0, 0, 0, 0.2);
+	border: 1px solid #D9D9D9;
+	border-radius: 5px;
+	padding: 10px;
 }
 
 #buttonLogin{
