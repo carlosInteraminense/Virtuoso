@@ -3,16 +3,16 @@
 	<head>
 		<meta name="viewport" content="width=device-width", initial-scale=1.0 />
 			<title>Virtuoso</title>
+			<meta charset="utf-8">
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 			<link rel="stylesheet" type="text/css" href="css/default.css" />
 			<link rel="stylesheet" type="text/css" href="css/screen-login.css" />
 			<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-			<script src="js/js-cookie.js"></script>
 			<script>
-			if (Cookies.get("user")) {
+			if (window.localStorage.getItem("user")) {
 				window.location.href = "main.html";
-			};
+			}
 			</script>
 	</head>
 	<body>
@@ -37,7 +37,7 @@
 				<input type="text" class="form-control" name="name" maxlength="30" placeholder="Name" />
 			</div>
 			<div class="form-group">
-				<input type="email" class="form-control" name="email" maxlength="30" placeholder="E-mail" required />
+				<input type="email" class="form-control" name="email" maxlength="50" placeholder="E-mail" required />
 			</div>
 			<div class="form-group">
 				<input type="password" class="form-control" name="password" minlength="6" maxlength="30" placeholder="Password" required />
@@ -62,7 +62,7 @@
 				$(errorMsg).text(msg);
 			}
 			function login(user) {
-				Cookies.set("user", user);
+				window.localStorage.setItem("user", JSON.stringify(user));
 				window.location.href = "main.html";
 			}
 			$(function() {
@@ -103,11 +103,12 @@
 						success: function(result) {
 							var json = JSON.parse(result);
 							if (json["success"]) {
+								json["email"] = $(formLogin).find("input[name='email']").val();
 								login(json);
 							} else {
 								showErrorMessage(formLogin, json["message"]);
+								$(formLoginBtnSubmit).button("reset");
 							}
-							$(formLoginBtnSubmit).button("reset");
 						}
 					});
 					return false;
@@ -129,12 +130,13 @@
 								var json = JSON.parse(result);
 								if (json["success"]) {
 									json["name"] = $(formRegister).find("input[name='name']").val();
+									json["email"] = $(formRegister).find("input[name='email']").val();
 									json["songs"] = [];
 									login(json);
 								} else {
 									showErrorMessage(formRegister, json["message"]);
+									$(formRegisterBtnSubmit).button("reset");
 								}
-								$(formRegisterBtnSubmit).button("reset");
 							}
 						});
 					}
