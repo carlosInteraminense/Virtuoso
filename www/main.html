@@ -20,7 +20,7 @@
 			cache: false,
 			async: false,
 			data: data,
-			success: function(json) {
+			success: function(json) { 
 				if (json["success"]) {
 					user.email = json.email;
 					user.name = json.name;
@@ -313,6 +313,7 @@
 							}
 						},
 						error: function(message) {
+							console.log(message);
 							$("#uploadSong").button("reset");
 							alert(message);
 						}

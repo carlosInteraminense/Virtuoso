@@ -132,7 +132,6 @@
 							cache: false,
 							data: $(this).serialize(),
 							success: function(json) {
-								console.log(json);
 								if (json["success"]) {
 									json["name"] = $(formRegister).find("input[name='name']").val();
 									json["email"] = $(formRegister).find("input[name='email']").val();
