@@ -139,13 +139,11 @@
 									json["songs"] = [];
 									login(json);
 								} else {
-									console.log("ERROR!!!");
 									showErrorMessage(formRegister, json["message"]);
 									$(formRegisterBtnSubmit).button("reset");
 								}
 							},
 							error: function(message) {
-								console.log("ERROR!");
 								showErrorMessage(formLogin, message);
 								$(formLoginBtnSubmit).button("reset");
 							}

@@ -305,8 +305,9 @@
 							$("#uploadsong").button("reset");
 							if (json["success"]) {
 								addSong(json);
-								alert("Song was uploaded successfully on playlists '" + json["genre"] + "' and '" + json["mood"] + "'.");
 								$("#formUpload")[0].reset();
+								fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
+								alert("Song was uploaded successfully on playlists '" + json["genre"] + "' and '" + json["mood"] + "'.");
 							} else {
 								alert(json["message"]);
 							}
