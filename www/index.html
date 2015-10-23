@@ -100,8 +100,7 @@
 						url: "http://150.165.75.202/html/virtuoso/login.php",
 						cache: false,
 						data: $(this).serialize(),
-						success: function(result) {
-							var json = JSON.parse(result);
+						success: function(json) {
 							if (json["success"]) {
 								json["email"] = $(formLogin).find("input[name='email']").val();
 								login(json);
@@ -109,6 +108,10 @@
 								showErrorMessage(formLogin, json["message"]);
 								$(formLoginBtnSubmit).button("reset");
 							}
+						},
+						error: function(message) {
+							showErrorMessage(formLogin, message);
+							$(formLoginBtnSubmit).button("reset");
 						}
 					});
 					return false;
@@ -126,8 +129,7 @@
 							url: "http://150.165.75.202/html/virtuoso/create_user.php",
 							cache: false,
 							data: $(this).serialize(),
-							success: function(result) {
-								var json = JSON.parse(result);
+							success: function(json) {
 								if (json["success"]) {
 									json["name"] = $(formRegister).find("input[name='name']").val();
 									json["email"] = $(formRegister).find("input[name='email']").val();
@@ -137,6 +139,10 @@
 									showErrorMessage(formRegister, json["message"]);
 									$(formRegisterBtnSubmit).button("reset");
 								}
+							},
+							error: function(message) {
+								showErrorMessage(formLogin, message);
+								$(formLoginBtnSubmit).button("reset");
 							}
 						});
 					}

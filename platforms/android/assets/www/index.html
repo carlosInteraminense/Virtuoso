@@ -3,47 +3,152 @@
 	<head>
 		<meta name="viewport" content="width=device-width", initial-scale=1.0 />
 			<title>Virtuoso</title>
+			<meta charset="utf-8">
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 			<link rel="stylesheet" type="text/css" href="css/default.css" />
-			<link rel="stylesheet" type="text/css" href="css/inputs-login-create-account.css" />
 			<link rel="stylesheet" type="text/css" href="css/screen-login.css" />
+			<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+			<script>
+			if (window.localStorage.getItem("user")) {
+				window.location.href = "main.html";
+			}
+			</script>
 	</head>
-
-
-
-
 	<body>
-
 		<div id="header">
-	    		<h1><img src="images/logo.png"/></h1>
-	    
-		</div>
-
-		<div id="telaLoggin">
-			<div id="input-user">
-				<input type="text" placeholder="User Name"/>
+	    	<h1><img src="images/logo_inverted.png"/></h1>
+		</div> 
+		<form id="formLogin" class="telaLogin col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1" method="POST">
+			<p class="alert alert-danger" style="display: none;"></p>
+			<div class="form-group">
+				<input type="email" class="form-control" name="email" placeholder="E-mail" autofocus required />
 			</div>
-
-			<div id="input-password">
-				<input type="password" placeholder="Password">
+			<div class="form-group">
+				<input type="password" class="form-control" name="password" placeholder="Password" required />
 			</div>
-
-			<div id="buttonLogin"><a href="mainScreenGenero.html">Login</a>
-				
+			<button type="submit" class="btn btn-default" data-loading-text="Logging in..." autocomplete="off">Login</button>
+			<hr> 
+			Don't have an account?&nbsp;&nbsp;<button class="btn btn-primary" id="btnRegister">Create one now</button>
+		</form>
+		<form id="formRegister" class="telaLogin col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1" style="display: none;" method="POST">
+			<p class="alert alert-danger" style="display: none;"></p>
+			<div class="form-group">
+				<input type="text" class="form-control" name="name" maxlength="30" placeholder="Name" />
 			</div>
-
-			<div id="forgotPassword">
-				<li><a href="forgot-password.html">Forgot Password?</a></li>
+			<div class="form-group">
+				<input type="email" class="form-control" name="email" maxlength="50" placeholder="E-mail" required />
 			</div>
-
-
-			<div id="createAccount">
-				Dont have an account? <li><a href="sing-up.html">Create one now</a></li>
+			<div class="form-group">
+				<input type="password" class="form-control" name="password" minlength="6" maxlength="30" placeholder="Password" required />
 			</div>
-
-		</div>
-
+			<div class="form-group">
+				<input type="password" class="form-control" name="repeatPassword" minlength="6" maxlength="30" placeholder="Repeat password" required />
+			</div>
+			<button id="btnBack" class="btn btn-default">Back</button> <button type="submit" class="btn btn-success" data-loading-text="Registering..." autocomplete="off">Register</button>
+		</form>
+		<script>
+			function adjustBackground() {
+				var w = window.innerWidth;
+				var h = window.innerHeight;
+				if (w > h) 
+					$("body").css("background-size", w + "px auto");
+				else
+					$("body").css("background-size", "auto " + h + "px");
+			}
+			function showErrorMessage(obj, msg) {
+				var errorMsg = $(obj).find("p")[0];
+				$(errorMsg).show();
+				$(errorMsg).text(msg);
+			}
+			function login(user) {
+				window.localStorage.setItem("user", JSON.stringify(user));
+				window.location.href = "main.html";
+			}
+			$(function() {
+				adjustBackground();
+				$(window).resize(function() {
+					adjustBackground();
+				});
+				var formRegister = $("#formRegister");
+				var formLogin = $("#formLogin");
+				$("#btnRegister").click(function() {
+					$(formLogin).slideUp("medium", function() {
+						$(formRegister).slideDown("medium", function() {
+							$(formLogin).find("p").hide();
+							$(formLogin)[0].reset();
+							$(formRegister).find("input[name='name']").focus();
+						});
+					});
+					return false;
+				});
+				$("#btnBack").click(function() {
+					$(formRegister).slideUp("medium", function() {
+						$(formLogin).slideDown("medium", function() {
+							$(formRegister).find("p").hide();
+							$(formRegister)[0].reset();
+							$(formLogin).find("input[name='email']").focus();
+						});
+					});
+					return false;
+				});
+				$(formLogin).submit(function() {
+					var formLoginBtnSubmit = $(formLogin).find("button[type='submit']");
+					$(formLoginBtnSubmit).button("loading");
+					$.ajax({
+						type: 'post',
+						url: "http://150.165.75.202/html/virtuoso/login.php",
+						cache: false,
+						data: $(this).serialize(),
+						success: function(json) {
+							if (json["success"]) {
+								json["email"] = $(formLogin).find("input[name='email']").val();
+								login(json);
+							} else {
+								showErrorMessage(formLogin, json["message"]);
+								$(formLoginBtnSubmit).button("reset");
+							}
+						},
+						error: function(message) {
+							showErrorMessage(formLogin, message);
+							$(formLoginBtnSubmit).button("reset");
+						}
+					});
+					return false;
+				});
+				$(formRegister).submit(function() {
+					var password = $(formRegister).find("input[name='password']").val();
+					var repeatPassword = $(formRegister).find("input[name='repeatPassword']").val();
+					if (password != repeatPassword) {
+						showErrorMessage(formRegister, "Passwords don't match");
+					} else {
+						var formRegisterBtnSubmit = $(formRegister).find("button[type='submit']");
+						$(formRegisterBtnSubmit).button("loading");
+						$.ajax({
+							type: 'post',
+							url: "http://150.165.75.202/html/virtuoso/create_user.php",
+							cache: false,
+							data: $(this).serialize(),
+							success: function(json) {
+								if (json["success"]) {
+									json["name"] = $(formRegister).find("input[name='name']").val();
+									json["email"] = $(formRegister).find("input[name='email']").val();
+									json["songs"] = [];
+									login(json);
+								} else {
+									showErrorMessage(formRegister, json["message"]);
+									$(formRegisterBtnSubmit).button("reset");
+								}
+							},
+							error: function(message) {
+								showErrorMessage(formLogin, message);
+								$(formLoginBtnSubmit).button("reset");
+							}
+						});
+					}
+					return false;
+				});
+			});
+		</script>
 	</body>
-	
-
-
 </html>
