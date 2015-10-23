@@ -92,7 +92,8 @@
 					});
 					return false;
 				});
-				$(formLogin).submit(function() {
+				$(formLogin).submit(function(e) {
+					e.preventDefault();
 					var formLoginBtnSubmit = $(formLogin).find("button[type='submit']");
 					$(formLoginBtnSubmit).button("loading");
 					$.ajax({
@@ -116,7 +117,8 @@
 					});
 					return false;
 				});
-				$(formRegister).submit(function() {
+				$(formRegister).submit(function(e) {
+					e.preventDefault();
 					var password = $(formRegister).find("input[name='password']").val();
 					var repeatPassword = $(formRegister).find("input[name='repeatPassword']").val();
 					if (password != repeatPassword) {
@@ -130,17 +132,20 @@
 							cache: false,
 							data: $(this).serialize(),
 							success: function(json) {
+								console.log(json);
 								if (json["success"]) {
 									json["name"] = $(formRegister).find("input[name='name']").val();
 									json["email"] = $(formRegister).find("input[name='email']").val();
 									json["songs"] = [];
 									login(json);
 								} else {
+									console.log("ERROR!!!");
 									showErrorMessage(formRegister, json["message"]);
 									$(formRegisterBtnSubmit).button("reset");
 								}
 							},
 							error: function(message) {
+								console.log("ERROR!");
 								showErrorMessage(formLogin, message);
 								$(formLoginBtnSubmit).button("reset");
 							}
