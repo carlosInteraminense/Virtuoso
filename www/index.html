@@ -21,6 +21,7 @@
 		</div> 
 		<form id="formLogin" class="telaLogin col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1" method="POST">
 			<p class="alert alert-danger" style="display: none;"></p>
+			<p class="alert alert-warning" style="display: none;"></p>
 			<div class="form-group">
 				<input type="email" class="form-control" name="email" placeholder="E-mail" autofocus required />
 			</div>
@@ -33,6 +34,7 @@
 		</form>
 		<form id="formRegister" class="telaLogin col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1" style="display: none;" method="POST">
 			<p class="alert alert-danger" style="display: none;"></p>
+			<p class="alert alert-warning" style="display: none;"></p>
 			<div class="form-group">
 				<input type="text" class="form-control" name="name" maxlength="30" placeholder="Name" />
 			</div>
@@ -44,6 +46,9 @@
 			</div>
 			<div class="form-group">
 				<input type="password" class="form-control" name="repeatPassword" minlength="6" maxlength="30" placeholder="Repeat password" required />
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" name="message" maxlength="500" placeholder="Inform here the reason from which you want to participate" required />
 			</div>
 			<button type="submit" class="btn btn-success" data-loading-text="Registering..." autocomplete="off">Register</button> <button id="btnBack" class="btn btn-default">Back</button> 
 		</form>
@@ -57,9 +62,16 @@
 					$("body").css("background-size", "auto " + h + "px");
 			}
 			function showErrorMessage(obj, msg) {
-				var errorMsg = $(obj).find("p")[0];
+				$(obj).find(".alert-warning").hide();
+				var errorMsg = $(obj).find(".alert-danger");
 				$(errorMsg).show();
 				$(errorMsg).text(msg);
+			}
+			function showWarningMessage(obj, msg) {
+				$(obj).find(".alert-danger").hide();
+				var warningMsg = $(obj).find(".alert-warning");
+				$(warningMsg).show();
+				$(warningMsg).text(msg);
 			}
 			function login(user) {
 				window.localStorage.setItem("user", JSON.stringify(user));
@@ -103,8 +115,16 @@
 						data: $(this).serialize(),
 						success: function(json) {
 							if (json["success"]) {
-								json["email"] = $(formLogin).find("input[name='email']").val();
-								login(json);
+								if (json["status"] == "Waiting") {
+									showWarningMessage(formLogin, "Your account is under approval. Please, wait for a response from our administers.");
+									$(formLoginBtnSubmit).button("reset");
+								} else if (json["status"] == "Refused") {
+									showErrorMessage(formLogin, "Your account approval was denied.");
+									$(formLoginBtnSubmit).button("reset");
+								} else {
+									json["email"] = $(formLogin).find("input[name='email']").val();
+									login(json);
+								}
 							} else {
 								showErrorMessage(formLogin, json["message"]);
 								$(formLoginBtnSubmit).button("reset");
@@ -133,10 +153,13 @@
 							data: $(this).serialize(),
 							success: function(json) {
 								if (json["success"]) {
-									json["name"] = $(formRegister).find("input[name='name']").val();
+									/*json["name"] = $(formRegister).find("input[name='name']").val();
 									json["email"] = $(formRegister).find("input[name='email']").val();
 									json["songs"] = [];
-									login(json);
+									login(json);*/
+									showWarningMessage(formRegister, "Your account is under approval. Please, wait for a response from our administers.");
+									$(formRegisterBtnSubmit).button("reset");
+									$(formRegister)[0].reset();
 								} else {
 									showErrorMessage(formRegister, json["message"]);
 									$(formRegisterBtnSubmit).button("reset");
