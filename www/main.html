@@ -289,7 +289,7 @@
 				$("#formUpload input[name='user_id']").val(user.id);
 				$("#formUpload").submit(function() {
 					$("#uploadsong").button("loading");
-					var request = new FormData($("input[name='fileToUpload']"));
+					var request = new FormData();
 					$.each($("input[name='fileToUpload']")[0].files, function(i, file) {
 						request.append("fileToUpload", file);
 					});
