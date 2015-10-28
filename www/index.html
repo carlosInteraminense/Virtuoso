@@ -26,31 +26,31 @@
 				<input type="email" class="form-control" name="email" placeholder="E-mail" autofocus required />
 			</div>
 			<div class="form-group">
-				<input type="password" class="form-control" name="password" placeholder="Password" required />
+				<input type="password" class="form-control" name="password" placeholder="Senha" required />
 			</div>
-			<button type="submit" class="btn btn-default" data-loading-text="Logging in..." autocomplete="off">Login</button>
+			<button type="submit" class="btn btn-default" data-loading-text="Entrando..." autocomplete="off">Entrar</button>
 			<hr> 
-			Don't have an account?&nbsp;&nbsp;<button class="btn btn-primary" id="btnRegister">Create one now</button>
+			Não possui uma conta?&nbsp;&nbsp;<button class="btn btn-primary" id="btnRegister">Cadastrar agora</button>
 		</form>
 		<form id="formRegister" class="telaLogin col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1" style="display: none;" method="POST">
 			<p class="alert alert-danger" style="display: none;"></p>
 			<p class="alert alert-warning" style="display: none;"></p>
 			<div class="form-group">
-				<input type="text" class="form-control" name="name" maxlength="30" placeholder="Name" />
+				<input type="text" class="form-control" name="name" maxlength="30" placeholder="Nome" />
 			</div>
 			<div class="form-group">
 				<input type="email" class="form-control" name="email" maxlength="50" placeholder="E-mail" required />
 			</div>
 			<div class="form-group">
-				<input type="password" class="form-control" name="password" minlength="6" maxlength="30" placeholder="Password" required />
+				<input type="password" class="form-control" name="password" minlength="6" maxlength="30" placeholder="Sennha" required />
 			</div>
 			<div class="form-group">
-				<input type="password" class="form-control" name="repeatPassword" minlength="6" maxlength="30" placeholder="Repeat password" required />
+				<input type="password" class="form-control" name="repeatPassword" minlength="6" maxlength="30" placeholder="Repetir senha" required />
 			</div>
 			<div class="form-group">
-				<input type="text" class="form-control" name="message" maxlength="500" placeholder="Inform here the reason for which you want to participate" required />
+				<input type="text" class="form-control" name="message" maxlength="500" placeholder="Informe a razão pela qual você deseja participar" required />
 			</div>
-			<button type="submit" class="btn btn-success" data-loading-text="Registering..." autocomplete="off">Register</button> <button id="btnBack" class="btn btn-default">Back</button> 
+			<button type="submit" class="btn btn-success" data-loading-text="Castrando..." autocomplete="off">Cadastrar</button> <button id="btnBack" class="btn btn-default">Voltar</button> 
 		</form>
 		<script>
 			function adjustBackground() {
@@ -116,10 +116,10 @@
 						success: function(json) {
 							if (json["success"]) {
 								if (json["status"] == "Waiting") {
-									showWarningMessage(formLogin, "Your account is under approval. Please, wait for a response from our administers.");
+									showWarningMessage(formLogin, "Sua conta está sob aprovação. Por favor, espere a resposta de um dos nossos administradores.");
 									$(formLoginBtnSubmit).button("reset");
 								} else if (json["status"] == "Refused") {
-									showErrorMessage(formLogin, "Your account approval was denied.");
+									showErrorMessage(formLogin, "A aprovação de sua conta foi negada.");
 									$(formLoginBtnSubmit).button("reset");
 								} else {
 									json["email"] = $(formLogin).find("input[name='email']").val();
@@ -142,7 +142,7 @@
 					var password = $(formRegister).find("input[name='password']").val();
 					var repeatPassword = $(formRegister).find("input[name='repeatPassword']").val();
 					if (password != repeatPassword) {
-						showErrorMessage(formRegister, "Passwords don't match");
+						showErrorMessage(formRegister, "Senhas não coincidem.");
 					} else {
 						var formRegisterBtnSubmit = $(formRegister).find("button[type='submit']");
 						$(formRegisterBtnSubmit).button("loading");
@@ -157,7 +157,7 @@
 									json["email"] = $(formRegister).find("input[name='email']").val();
 									json["songs"] = [];
 									login(json);*/
-									showWarningMessage(formRegister, "Your account is under approval. Please, wait for a response from our administers.");
+									showWarningMessage(formRegister, "Sua conta está sob aprovação. Por favor, espere a resposta de um dos nossos administradores.");
 									$(formRegisterBtnSubmit).button("reset");
 									$(formRegister)[0].reset();
 								} else {

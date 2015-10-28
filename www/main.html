@@ -52,16 +52,16 @@
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<a href="#"><p class="navbar-text"></p></a>
 					<ul class="nav navbar-nav">
-						<li><button id="upload" type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#myModal">Upload song</button></li>
+						<li><button id="upload" type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#myModal">Enviar música</button></li>
 					</ul>
-					<button id="logout" type="button" class="btn btn-default navbar-btn navbar-right">Log out</button>
+					<button id="logout" type="button" class="btn btn-default navbar-btn navbar-right">Sair</button>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
 		</nav>
 		<div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1 panel">
 			<ul class="nav nav-tabs">
-			  <li role="presentation" class="active"><a href="#">Genre</a></li>
-			  <li role="presentation"><a href="#">Mood</a></li>
+			  <li role="presentation" class="active"><a href="#">Gênero</a></li>
+			  <li role="presentation"><a href="#">Emoção</a></li>
 			</ul>
 			<div id="carousel-genre" class="carousel slide" data-ride="carousel" data-interval="false">
 			  <!-- Indicators -->
@@ -131,47 +131,40 @@
 				<li data-target="#carousel-example-generic" data-slide-to="3"></li>
 				<li data-target="#carousel-example-generic" data-slide-to="4"></li>
 				<li data-target="#carousel-example-generic" data-slide-to="5"></li>
-				<li data-target="#carousel-example-generic" data-slide-to="6"></li>
 			  </ol>
 			  <!-- Wrapper for slides -->
 			  <div class="carousel-inner" role="listbox">
 				<div class="item active">
-				  <img src="images/moods/happiness.jpg" alt="Happiness" style="width: 100%;">
+				  <img src="images/moods/alegre.jpg" alt="Alegre" style="width: 100%;">
 				  <div class="carousel-caption">
 				  </div>
 				</div>
 				<div class="item">
-				  <img src="images/moods/sadness.jpg" alt="Sadness" style="width: 100%;">
+				  <img src="images/moods/romantico.jpg" alt="Romântico" style="width: 100%;">
 				  <div class="carousel-caption">
 				  </div>
 				</div>
 				<div class="item">
-				  <img src="images/moods/anger.jpg" alt="Anger" style="width: 100%;">
+				  <img src="images/moods/divertido.jpg" alt="Divertido" style="width: 100%;">
 				  <div class="carousel-caption">
 				  </div>
 				</div>
 				<div class="item">
-				  <img src="images/moods/fear.jpg" alt="Fear" style="width: 100%;">
+				  <img src="images/moods/agressivo.jpg" alt="Agressivo" style="width: 100%;">
 				  <div class="carousel-caption">
 				  </div>
 				</div>
 				<div class="item">
-				  <img src="images/moods/disgust.jpg" alt="Disgust" style="width: 100%;">
+				  <img src="images/moods/melancolico.jpg" alt="Melancólico" style="width: 100%;">
 				  <div class="carousel-caption">
 				  </div>
 				</div>
 				<div class="item">
-				  <img src="images/moods/surprise.jpg" alt="Surprise" style="width: 100%;">
-				  <div class="carousel-caption">
-				  </div>
-				</div>
-				<div class="item">
-				  <img src="images/moods/neutral.jpg" alt="Neutral" style="width: 100%;">
+				  <img src="images/moods/Neutro.jpg" alt="Neutro" style="width: 100%;">
 				  <div class="carousel-caption">
 				  </div>
 				</div>
 			  </div>
-
 			  <!-- Controls -->
 			  <a class="left carousel-control" href="#carousel-mood" role="button" data-slide="prev">
 				<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -190,18 +183,26 @@
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Upload song</h4>
+				<h4 class="modal-title">Enviar música</h4>
 			  </div>
 			  <div class="modal-body">
 				<form id="formUpload" method="POST" enctype="multipart/form-data">
 					<center>
-						<p>Select a song to upload</p>
-						<input type="file" name="fileToUpload" />
+						<p>Selecione uma música para enviar</p>
+						<input type="file" name="fileToUpload" multiple />
 					</center>
+					<div style="margin: 10px;"></div>
+					<table id="songs-table" class="table" style="display: none;">
+						<tr>
+							<td>#</td>
+							<td>Nome</td>
+							<td>Status</td>
+						</tr>
+					</table>
 				  </div>
 				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-success" id="uploadsong" data-loading-text="Uploading..." autocomplete="off">Upload</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+					<button type="submit" class="btn btn-success" id="uploadsong" data-loading-text="Enviando..." autocomplete="off">Enviar</button>
 				  </div>
 			  </form>
 			</div><!-- /.modal-content -->
@@ -209,7 +210,7 @@
 		</div><!-- /.modal -->
 		<script>
 			var genres = ["Brega", "Disco", "Forró", "MPB", "Repente", "Rock", "Sertanejo"];
-			var moods = ["Happiness", "Sadness", "Anger", "Fear", "Disgust", "Surprise", "Neutral"];
+			var moods = ["Alegre", "Romântico", "Divertido", "Agressivo", "Melancólico", "Neutro"];
 			var medias = {};
 			function filterSongs(type, index) {
 				var list = [];
@@ -251,7 +252,7 @@
 					medias[list[i].name] = $("#songs").find("#song" + i);
 				}
 				if (list.length == 0) {
-					$("#songs").append("<li class='list-group-item'>This playlist has no song yet.</li>");
+					$("#songs").append("<li class='list-group-item'>Esta playlist está vazia.</li>");
 				}
 			}
 			$(function() {
@@ -259,7 +260,7 @@
 				var genreCarouselIndex = 0;
 				var moodCarouselIndex = 0;
 				fillList(type, genreCarouselIndex);
-				$(".navbar-text").text("Welcome, " + (user["name"] == "" ? user["email"] : user["name"]));
+				$(".navbar-text").text("Bem-vindo, " + (user["name"] == "" ? user["email"] : user["name"]));
 				$("#logout").click(function() {
 					window.localStorage.clear();
 					window.location.href = "index.html";
@@ -270,54 +271,80 @@
 				});
 				$(".nav-tabs li").click(function() {
 					var text = $(this).text();
-					if (text == "Genre") {
+					if (text == "Gênero") {
 						$(".nav-tabs li:nth-child(1)").addClass("active");
 						$(".nav-tabs li:nth-child(2)").removeClass("active");
-						$("#carousel-genre").show();
+						$("#carousel-genre").fadeIn();
 						$("#carousel-mood").hide();
 						type = "genre";
 						fillList("genre", genreCarouselIndex);
-					} else if (text == "Mood") {
+					} else if (text == "Emoção") {
 						$(".nav-tabs li:nth-child(1)").removeClass("active");
 						$(".nav-tabs li:nth-child(2)").addClass("active");
 						$("#carousel-genre").hide();
-						$("#carousel-mood").show();
+						$("#carousel-mood").fadeIn();
 						type = "mood";
 						fillList("mood", moodCarouselIndex);
 					}
 				});
+				$("#upload").click(function() {
+					$("#songs-table").html("<tr><td>#</td><td>Nome</td><td>Status</td></tr>");
+					$("#songs-table").hide();
+				});
 				$("#formUpload input[name='user_id']").val(user.id);
 				$("#formUpload").submit(function() {
-					$("#uploadsong").button("loading");
-					var request = new FormData();
+					$("#songs-table").html("<tr><td>#</td><td>Nome</td><td>Status</td></tr>");
+					var count = 0;
+					var total = 0;
 					$.each($("input[name='fileToUpload']")[0].files, function(i, file) {
+						total += 1;
+						$("#songs-table").show();
+						var request = new FormData();
 						request.append("fileToUpload", file);
-					});
-					request.append("user_id", user.id);
-					$.ajax({
-						type: 'post',
-						url: "http://150.165.75.202/html/virtuoso/upload.php",
-						cache: false,
-						contentType: false,
-						processData: false,
-						data: request,
-						success: function(json) {
-							$("#uploadsong").button("reset");
-							if (json["success"]) {
-								addSong(json);
-								$("#formUpload")[0].reset();
-								fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
-								alert("Song was uploaded successfully on playlists '" + json["genre"] + "' and '" + json["mood"] + "'.");
-							} else {
-								alert(json["message"]);
+						request.append("user_id", user.id);
+						$("#songs-table").append("<tr id='song-row-" + (i + 1) + "'><td>" + (i + 1) + "</td><td>" + file.name + "</td><td>Enviando...</td></tr>");
+						$.ajax({
+							type: 'post',
+							url: "http://150.165.75.202/html/virtuoso/upload.php",
+							cache: false,
+							contentType: false,
+							processData: false,
+							data: request,
+							success: function(json) {
+								count += 1;
+								if (count >= total) {
+									$("#uploadsong").button("reset");
+									$("#formUpload")[0].reset();
+								}
+								if (json["success"]) {
+									addSong(json);
+									fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
+									$("#song-row-" + (i + 1)).addClass("success");
+									$("#song-row-" + (i + 1) + " td:nth-child(3)").html("Adicionado à " + json["genre"] + " e " + json["mood"]);
+									//ert("Música foi adicionada com sucesso às playlists '" + json["genre"] + "' e '" + json["mood"] + "'.");
+								} else {
+									$("#song-row-" + (i + 1)).addClass("danger");
+									$("#song-row-" + (i + 1) + " td:nth-child(3)").html(json["message"]);
+									//alert(json["message"]);
+								}
+							},
+							error: function(message) {
+								count += 1;
+								if (count >= total) {
+									$("#uploadsong").button("reset");
+									$("#formUpload")[0].reset();
+								}
+								console.log(message);
+								$("#song-row-" + (i + 1)).addClass("danger");
+								$("#song-row-" + (i + 1) + " td:nth-child(3)").html(message);
+								//$("#uploadSong").button("reset");
+								//alert(message);
 							}
-						},
-						error: function(message) {
-							console.log(message);
-							$("#uploadSong").button("reset");
-							alert(message);
-						}
+						});
 					});
+					if (total > 0) {
+						$("#uploadsong").button("loading");
+					}
 					return false;
 				});
 				$('#carousel-genre').on('slide.bs.carousel', function (event) {
@@ -365,7 +392,7 @@
 							if (json["success"]) {
 								$(obj).parent().fadeOut(function() {
 									if (!removeSong(name)) {
-										alert("Could not find song.");
+										alert("Música não encontrada.");
 									} else {
 										fillList(type, type == "genre" ? genreCarouselIndex : moodCarouselIndex);
 									}
