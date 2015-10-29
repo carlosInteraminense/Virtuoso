@@ -293,61 +293,58 @@
 				});
 				$("#formUpload input[name='user_id']").val(user.id);
 				$("#formUpload").submit(function() {
-					executeAsync(function() {
-						$("#songs-table").html("<tr><td>#</td><td>Nome</td><td>Status</td></tr>");
-						var count = 0;
-						var total = 0;
-						$.each($("input[name='fileToUpload']")[0].files, function(i, file) {
-							total += 1;
-							$("#songs-table").show();
-							var request = new FormData();
-							request.append("fileToUpload", file);
-							request.append("user_id", user.id);
-							$("#songs-table").append("<tr id='song-row-" + (i + 1) + "'><td>" + (i + 1) + "</td><td>" + file.name + "</td><td>Enviando...</td></tr>");
-							$.ajax({
-								type: 'post',
-								url: "http://150.165.75.202/html/virtuoso/upload.php",
-								cache: false,
-								contentType: false,
-								processData: false,
-								data: request,
-								async: false,
-								success: function(json) {
-									count += 1;
-									if (count >= total) {
-										$("#uploadsong").button("reset");
-										$("#formUpload")[0].reset();
-									}
-									if (json["success"]) {
-										addSong(json);
-										fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
-										$("#song-row-" + (i + 1)).addClass("success");
-										$("#song-row-" + (i + 1) + " td:nth-child(3)").html("Adicionado à " + json["genre"] + " e " + json["mood"]);
-										//ert("Música foi adicionada com sucesso às playlists '" + json["genre"] + "' e '" + json["mood"] + "'.");
-									} else {
-										$("#song-row-" + (i + 1)).addClass("danger");
-										$("#song-row-" + (i + 1) + " td:nth-child(3)").html(json["message"]);
-										//alert(json["message"]);
-									}
-								},
-								error: function(message) {
-									count += 1;
-									if (count >= total) {
-										$("#uploadsong").button("reset");
-										$("#formUpload")[0].reset();
-									}
-									console.log(message);
-									$("#song-row-" + (i + 1)).addClass("danger");
-									$("#song-row-" + (i + 1) + " td:nth-child(3)").html(message);
-									//$("#uploadSong").button("reset");
-									//alert(message);
+					$("#songs-table").html("<tr><td>#</td><td>Nome</td><td>Status</td></tr>");
+					var count = 0;
+					var total = 0;
+					$.each($("input[name='fileToUpload']")[0].files, function(i, file) {
+						total += 1;
+						$("#songs-table").show();
+						var request = new FormData();
+						request.append("fileToUpload", file);
+						request.append("user_id", user.id);
+						$("#songs-table").append("<tr id='song-row-" + (i + 1) + "'><td>" + (i + 1) + "</td><td>" + file.name + "</td><td>Enviando...</td></tr>");
+						$.ajax({
+							type: 'post',
+							url: "http://150.165.75.202/html/virtuoso/upload.php",
+							cache: false,
+							contentType: false,
+							processData: false,
+							data: request,
+							success: function(json) {
+								count += 1;
+								if (count >= total) {
+									$("#uploadsong").button("reset");
+									$("#formUpload")[0].reset();
 								}
-							});
+								if (json["success"]) {
+									addSong(json);
+									fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
+									$("#song-row-" + (i + 1)).addClass("success");
+									$("#song-row-" + (i + 1) + " td:nth-child(3)").html("Adicionado à " + json["genre"] + " e " + json["mood"]);
+									//ert("Música foi adicionada com sucesso às playlists '" + json["genre"] + "' e '" + json["mood"] + "'.");
+								} else {
+									$("#song-row-" + (i + 1)).addClass("danger");
+									$("#song-row-" + (i + 1) + " td:nth-child(3)").html(json["message"]);
+									//alert(json["message"]);
+								}
+							},
+							error: function(message) {
+								count += 1;
+								if (count >= total) {
+									$("#uploadsong").button("reset");
+									$("#formUpload")[0].reset();
+								}
+								console.log(message);
+								$("#song-row-" + (i + 1)).addClass("danger");
+								$("#song-row-" + (i + 1) + " td:nth-child(3)").html(message);
+								//$("#uploadSong").button("reset");
+								//alert(message);
+							}
 						});
-						if (total > 0) {
-							$("#uploadsong").button("loading");
-						}
 					});
+					if (total > 0) {
+						$("#uploadsong").button("loading");
+					}
 					return false;
 				});
 				$('#carousel-genre').on('slide.bs.carousel', function (event) {
