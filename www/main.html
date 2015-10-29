@@ -303,43 +303,45 @@
 						request.append("fileToUpload", file);
 						request.append("user_id", user.id);
 						$("#songs-table").append("<tr id='song-row-" + (i + 1) + "'><td>" + (i + 1) + "</td><td>" + file.name + "</td><td>Enviando...</td></tr>");
-						$.ajax({
-							type: 'post',
-							url: "http://150.165.75.202/html/virtuoso/upload.php",
-							cache: false,
-							contentType: false,
-							processData: false,
-							data: request,
-							success: function(json) {
-								count += 1;
-								if (count >= total) {
-									$("#uploadsong").button("reset");
-									$("#formUpload")[0].reset();
-								}
-								if (json["success"]) {
-									addSong(json);
-									fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
-									$("#song-row-" + (i + 1)).addClass("success");
-									$("#song-row-" + (i + 1) + " td:nth-child(3)").html("Adicionado à " + json["genre"] + " e " + json["mood"]);
-									//ert("Música foi adicionada com sucesso às playlists '" + json["genre"] + "' e '" + json["mood"] + "'.");
-								} else {
+						$(document).ajaxStop(function() {
+							$.ajax({
+								type: 'post',
+								url: "http://150.165.75.202/html/virtuoso/upload.php",
+								cache: false,
+								contentType: false,
+								processData: false,
+								data: request,
+								success: function(json) {
+									count += 1;
+									if (count >= total) {
+										$("#uploadsong").button("reset");
+										$("#formUpload")[0].reset();
+									}
+									if (json["success"]) {
+										addSong(json);
+										fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
+										$("#song-row-" + (i + 1)).addClass("success");
+										$("#song-row-" + (i + 1) + " td:nth-child(3)").html("Adicionado à " + json["genre"] + " e " + json["mood"]);
+										//ert("Música foi adicionada com sucesso às playlists '" + json["genre"] + "' e '" + json["mood"] + "'.");
+									} else {
+										$("#song-row-" + (i + 1)).addClass("danger");
+										$("#song-row-" + (i + 1) + " td:nth-child(3)").html(json["message"]);
+										//alert(json["message"]);
+									}
+								},
+								error: function(message) {
+									count += 1;
+									if (count >= total) {
+										$("#uploadsong").button("reset");
+										$("#formUpload")[0].reset();
+									}
+									console.log(message);
 									$("#song-row-" + (i + 1)).addClass("danger");
-									$("#song-row-" + (i + 1) + " td:nth-child(3)").html(json["message"]);
-									//alert(json["message"]);
+									$("#song-row-" + (i + 1) + " td:nth-child(3)").html(message);
+									//$("#uploadSong").button("reset");
+									//alert(message);
 								}
-							},
-							error: function(message) {
-								count += 1;
-								if (count >= total) {
-									$("#uploadsong").button("reset");
-									$("#formUpload")[0].reset();
-								}
-								console.log(message);
-								$("#song-row-" + (i + 1)).addClass("danger");
-								$("#song-row-" + (i + 1) + " td:nth-child(3)").html(message);
-								//$("#uploadSong").button("reset");
-								//alert(message);
-							}
+							});
 						});
 					});
 					if (total > 0) {
