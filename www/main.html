@@ -296,20 +296,28 @@
 					$("#songs-table").html("<tr><td>#</td><td>Nome</td><td>Status</td></tr>");
 					var count = 0;
 					var total = 0;
+					var songs = [];
 					$.each($("input[name='fileToUpload']")[0].files, function(i, file) {
 						total += 1;
 						$("#songs-table").show();
 						var request = new FormData();
 						request.append("fileToUpload", file);
 						request.append("user_id", user.id);
-						$("#songs-table").append("<tr id='song-row-" + (i + 1) + "'><td>" + (i + 1) + "</td><td>" + file.name + "</td><td>Enviando...</td></tr>");
-						$(document).ajaxStop(function() {
+						$("#songs-table").append("<tr id='song-row-" + (i + 1) + "'><td>" + (i + 1) + "</td><td>" + file.name + "</td><td>Enviando...</td></tr>"); 
+						songs.push([request, i]);
+					});
+					for (var x = 0; x < songs.length; x++)
+					{
+						var request = songs[x][0];
+						var i = songs[x][1];
+						setTimeout(function() {
 							$.ajax({
 								type: 'post',
 								url: "http://150.165.75.202/html/virtuoso/upload.php",
 								cache: false,
 								contentType: false,
 								processData: false,
+								async: false,
 								data: request,
 								success: function(json) {
 									count += 1;
@@ -342,8 +350,8 @@
 									//alert(message);
 								}
 							});
-						});
-					});
+						}, 0);						
+					}
 					if (total > 0) {
 						$("#uploadsong").button("loading");
 					}
