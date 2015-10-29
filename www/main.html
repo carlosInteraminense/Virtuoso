@@ -306,54 +306,55 @@
 						$("#songs-table").append("<tr id='song-row-" + (i + 1) + "'><td>" + (i + 1) + "</td><td>" + file.name + "</td><td>Enviando...</td></tr>"); 
 						songs.push([request, i]);
 					});
-					for (var x = 0; x < songs.length; x++)
-					{
+					var f = function(x) {
 						var request = songs[x][0];
-						var i = songs[x][1];
-						setTimeout(function() {
-							$.ajax({
-								type: 'post',
-								url: "http://150.165.75.202/html/virtuoso/upload.php",
-								cache: false,
-								contentType: false,
-								processData: false,
-								async: false,
-								data: request,
-								success: function(json) {
-									count += 1;
-									if (count >= total) {
-										$("#uploadsong").button("reset");
-										$("#formUpload")[0].reset();
-									}
-									if (json["success"]) {
-										addSong(json);
-										fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
-										$("#song-row-" + (i + 1)).addClass("success");
-										$("#song-row-" + (i + 1) + " td:nth-child(3)").html("Adicionado à " + json["genre"] + " e " + json["mood"]);
-										//ert("Música foi adicionada com sucesso às playlists '" + json["genre"] + "' e '" + json["mood"] + "'.");
-									} else {
-										$("#song-row-" + (i + 1)).addClass("danger");
-										$("#song-row-" + (i + 1) + " td:nth-child(3)").html(json["message"]);
-										//alert(json["message"]);
-									}
-								},
-								error: function(message) {
-									count += 1;
-									if (count >= total) {
-										$("#uploadsong").button("reset");
-										$("#formUpload")[0].reset();
-									}
-									console.log(message);
-									$("#song-row-" + (i + 1)).addClass("danger");
-									$("#song-row-" + (i + 1) + " td:nth-child(3)").html(message);
-									//$("#uploadSong").button("reset");
-									//alert(message);
+						var i = songs[x][1];		
+						$.ajax({
+							type: 'post',
+							url: "http://150.165.75.202/html/virtuoso/upload.php",
+							cache: false,
+							contentType: false,
+							processData: false,
+							data: request,
+							success: function(json) {
+								count += 1;
+								if (count >= total) {
+									$("#uploadsong").button("reset");
+									$("#formUpload")[0].reset();
+								} else {
+									f(x + 1);
 								}
-							});
-						}, 0);						
-					}
+								if (json["success"]) {
+									addSong(json);
+									fillList(type, type == "mood" ? moodCarouselIndex : genreCarouselIndex);
+									$("#song-row-" + (i + 1)).addClass("success");
+									$("#song-row-" + (i + 1) + " td:nth-child(3)").html("Adicionado à " + json["genre"] + " e " + json["mood"]);
+									//ert("Música foi adicionada com sucesso às playlists '" + json["genre"] + "' e '" + json["mood"] + "'.");
+								} else {
+									$("#song-row-" + (i + 1)).addClass("danger");
+									$("#song-row-" + (i + 1) + " td:nth-child(3)").html(json["message"]);
+									//alert(json["message"]);
+								}
+							},
+							error: function(message) {
+								count += 1;
+								if (count >= total) {
+									$("#uploadsong").button("reset");
+									$("#formUpload")[0].reset();
+								} else {
+									f(x + 1);
+								}
+								console.log(message);
+								$("#song-row-" + (i + 1)).addClass("danger");
+								$("#song-row-" + (i + 1) + " td:nth-child(3)").html(message);
+								//$("#uploadSong").button("reset");
+								//alert(message);
+							}
+						});
+					}	
 					if (total > 0) {
-						$("#uploadsong").button("loading");
+						$("#uploadsong").button("loading");			
+						f(0);					
 					}
 					return false;
 				});
